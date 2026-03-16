@@ -26,6 +26,11 @@ body {
     flex-shrink: 0;
 }
 
+.header-logo {
+    height: 44px;
+    margin-right: 12px;
+}
+
 .header h1 {
     color: white;
     font-size: 22px;
