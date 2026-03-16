@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Theatre Rota Query</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <h1>Theatre Rota Query</h1>
+        <div class="header-right">
+            {% if filename %}
+                <span class="file-info">{{ filename }} ({{ staff_count }} staff)</span>
+            {% else %}
+                <span class="file-info dim">No file loaded</span>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- Upload Bar -->
+    <div class="upload-bar">
+        <form method="POST" enctype="multipart/form-data" class="upload-form">
+            <input type="hidden" name="action" value="upload">
+            <label class="file-label">
+                <input type="file" name="file" accept=".xlsx,.csv" class="file-input">
+                <span class="file-btn">Choose File</span>
+            </label>
+            <button type="submit" class="btn btn-upload">Upload Rota</button>
+        </form>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-container">
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Filters -->
+    {% if staff_count > 0 %}
+    <form method="POST" id="query-form">
+        <input type="hidden" name="action" value="query">
+
+        <div class="controls">
+            <div class="control-group">
+                <label>Week</label>
+                <select name="week">
+                    {% for w in weeks %}
+                        <option value="{{ w }}" {{ 'selected' if w == selected_week }}>{{ w }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="control-group">
+                <label>Day</label>
+                <select name="day">
+                    {% for d in days %}
+                        <option value="{{ d }}" {{ 'selected' if d == selected_day }}>{{ d }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="control-group">
+                <label>Shift Type</label>
+                <select name="shift">
+                    {% for s in shift_options %}
+                        <option value="{{ s }}" {{ 'selected' if s == selected_shift }}>{{ s }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="control-group">
+                <button type="submit" class="btn btn-search">Search</button>
+            </div>
+        </div>
+
+        <div class="band-filters">
+            <span class="band-label">Bands:</span>
+            <label class="band-check">
+                <input type="checkbox" id="all-bands" onchange="toggleAllBands(this)" checked>
+                All
+            </label>
+            {% for b in all_bands %}
+                <label class="band-check">
+                    <input type="checkbox" name="bands" value="{{ b }}"
+                           class="band-cb"
+                           onchange="updateAllCheckbox()"
+                           {{ 'checked' if b in selected_bands }}>
+                    <span class="band-dot" style="background: {{ band_colours.get(b, '#9E9E9E') }}"></span>
+                    Band {{ b }}
+                </label>
+            {% endfor %}
+        </div>
+    </form>
+    {% endif %}
+
+    <!-- Results -->
+    <div class="container">
+        {% if staff_count == 0 %}
+            <div class="empty-state">
+                <p>Upload a rota spreadsheet (.xlsx or .csv) to get started.</p>
+            </div>
+        {% elif query_title %}
+            <div class="results-header">
+                <span>{{ query_title }}</span>
+                <span class="results-count">{{ results|length }} staff found</span>
+            </div>
+
+            {% if results %}
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Band</th>
+                            <th>Name</th>
+                            <th>Shift</th>
+                            <th>Hours</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for r in results %}
+                            <tr>
+                                <td>
+                                    <span class="badge" style="background: {{ r.band_colour }}">{{ r.band }}</span>
+                                </td>
+                                <td class="name-cell">{{ r.name }}</td>
+                                <td>
+                                    <span class="shift-label" style="color: {{ r.shift_colour }}">{{ r.shift }}</span>
+                                </td>
+                                <td class="hours-cell">{{ r.hours }}</td>
+                                <td class="notes-cell">{{ r.notes }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <div class="empty-state">
+                    <p>No staff found matching your criteria.</p>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="empty-state">
+                <p>Select your filters and click Search.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Status Bar -->
+    <footer class="status-bar">
+        <span>Theatre Rota Query Tool</span>
+    </footer>
+
+    <script>
+        function toggleAllBands(el) {
+            document.querySelectorAll('.band-cb').forEach(cb => cb.checked = el.checked);
+        }
+
+        function updateAllCheckbox() {
+            const boxes = document.querySelectorAll('.band-cb');
+            const allChecked = Array.from(boxes).every(cb => cb.checked);
+            document.getElementById('all-bands').checked = allChecked;
+        }
+
+        // Show chosen filename
+        document.querySelector('.file-input')?.addEventListener('change', function() {
+            const label = this.closest('.file-label').querySelector('.file-btn');
+            if (this.files.length) {
+                label.textContent = this.files[0].name;
+            }
+        });
+    </script>
+
+</body>
+</html>
