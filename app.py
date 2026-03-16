@@ -13,7 +13,7 @@ from rota_query import (
 app = Flask(__name__)
 
 # Load rota data once at startup
-ROTA_FILE = os.path.join(os.path.dirname(__file__), 'Book 1.xlsx')
+ROTA_FILE = os.path.join(os.path.dirname(__file__), 'TWH Flexi working.xlsx')
 staff = []
 if os.path.exists(ROTA_FILE):
     staff = load_file(ROTA_FILE)
