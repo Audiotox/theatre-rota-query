@@ -43,11 +43,11 @@ def index():
     if not selected_bands:
         selected_bands = ALL_BANDS[:]
 
+    week_num = int(week.split()[-1])
+    bands_set = set(selected_bands)
     if staff:
-        week_num = int(week.split()[-1])
-        bands_set = set(selected_bands)
         results = find_scheduled(staff, week_num, day, shift, bands_set)
-        query_title = f'Scheduled for {shift} on {day} ({week})'
+    query_title = f'Scheduled for {shift} on {day} ({week})'
 
     # Build results with display info
     display_results = []

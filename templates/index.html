@@ -44,9 +44,6 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="control-group">
-                <button type="submit" class="btn btn-search">Search</button>
-            </div>
         </div>
 
         <div class="band-filters">
@@ -108,10 +105,6 @@
                     <p>No staff found matching your criteria.</p>
                 </div>
             {% endif %}
-        {% else %}
-            <div class="empty-state">
-                <p>Select your filters and click Search to view the rota.</p>
-            </div>
         {% endif %}
     </div>
 
@@ -129,7 +122,18 @@
             const boxes = document.querySelectorAll('.band-cb');
             const allChecked = Array.from(boxes).every(cb => cb.checked);
             document.getElementById('all-bands').checked = allChecked;
+            document.getElementById('query-form').submit();
         }
+
+        // Auto-submit when dropdowns or checkboxes change
+        document.querySelectorAll('#query-form select').forEach(el => {
+            el.addEventListener('change', () => document.getElementById('query-form').submit());
+        });
+
+        document.getElementById('all-bands').addEventListener('change', function() {
+            toggleAllBands(this);
+            document.getElementById('query-form').submit();
+        });
     </script>
 
 </body>
