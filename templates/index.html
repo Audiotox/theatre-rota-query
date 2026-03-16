@@ -12,42 +12,12 @@
     <header class="header">
         <h1>Theatre Rota Query</h1>
         <div class="header-right">
-            {% if filename %}
-                <span class="file-info">{{ filename }} ({{ staff_count }} staff)</span>
-            {% else %}
-                <span class="file-info dim">No file loaded</span>
-            {% endif %}
+            <span class="file-info">{{ staff_count }} staff loaded</span>
         </div>
     </header>
 
-    <!-- Upload Bar -->
-    <div class="upload-bar">
-        <form method="POST" enctype="multipart/form-data" class="upload-form">
-            <input type="hidden" name="action" value="upload">
-            <label class="file-label">
-                <input type="file" name="file" accept=".xlsx,.csv" class="file-input">
-                <span class="file-btn">Choose File</span>
-            </label>
-            <button type="submit" class="btn btn-upload">Upload Rota</button>
-        </form>
-    </div>
-
-    <!-- Flash Messages -->
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            <div class="flash-container">
-                {% for category, message in messages %}
-                    <div class="flash flash-{{ category }}">{{ message }}</div>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
-
     <!-- Filters -->
-    {% if staff_count > 0 %}
     <form method="POST" id="query-form">
-        <input type="hidden" name="action" value="query">
-
         <div class="controls">
             <div class="control-group">
                 <label>Week</label>
@@ -96,15 +66,10 @@
             {% endfor %}
         </div>
     </form>
-    {% endif %}
 
     <!-- Results -->
     <div class="container">
-        {% if staff_count == 0 %}
-            <div class="empty-state">
-                <p>Upload a rota spreadsheet (.xlsx or .csv) to get started.</p>
-            </div>
-        {% elif query_title %}
+        {% if query_title %}
             <div class="results-header">
                 <span>{{ query_title }}</span>
                 <span class="results-count">{{ results|length }} staff found</span>
@@ -144,7 +109,7 @@
             {% endif %}
         {% else %}
             <div class="empty-state">
-                <p>Select your filters and click Search.</p>
+                <p>Select your filters and click Search to view the rota.</p>
             </div>
         {% endif %}
     </div>
@@ -164,14 +129,6 @@
             const allChecked = Array.from(boxes).every(cb => cb.checked);
             document.getElementById('all-bands').checked = allChecked;
         }
-
-        // Show chosen filename
-        document.querySelector('.file-input')?.addEventListener('change', function() {
-            const label = this.closest('.file-label').querySelector('.file-btn');
-            if (this.files.length) {
-                label.textContent = this.files[0].name;
-            }
-        });
     </script>
 
 </body>
