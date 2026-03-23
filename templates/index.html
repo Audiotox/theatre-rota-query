@@ -115,7 +115,11 @@
 
     <script>
         function toggleAllBands(el) {
-            document.querySelectorAll('.band-cb').forEach(cb => cb.checked = el.checked);
+            const boxes = document.querySelectorAll('.band-cb');
+            const allChecked = Array.from(boxes).every(cb => cb.checked);
+            const newState = !allChecked;
+            boxes.forEach(cb => cb.checked = newState);
+            el.checked = newState;
         }
 
         function updateAllCheckbox() {
