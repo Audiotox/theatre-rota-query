@@ -49,7 +49,7 @@
         <div class="band-filters">
             <span class="band-label">Bands:</span>
             <label class="band-check">
-                <input type="checkbox" id="all-bands" onchange="toggleAllBands(this)" {{ 'checked' if all_bands_selected }}>
+                <input type="checkbox" id="all-bands" {{ 'checked' if all_bands_selected }}>
                 All
             </label>
             {% for b in all_bands %}

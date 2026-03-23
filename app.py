@@ -40,7 +40,8 @@ def index():
     shift = request.form.get('shift', 'All Shifts')
     selected_bands = request.form.getlist('bands')
 
-    if not selected_bands:
+    # Only default to all bands on initial page load (GET), not on form submit
+    if not selected_bands and request.method == 'GET':
         selected_bands = ALL_BANDS[:]
 
     week_num = int(week.split()[-1])
