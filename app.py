@@ -76,6 +76,7 @@ def index():
         selected_day=day,
         selected_shift=shift,
         selected_bands=selected_bands,
+        all_bands_selected=set(selected_bands) == set(ALL_BANDS),
         band_colours=BAND_COLOURS,
     )
 
