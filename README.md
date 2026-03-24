@@ -14,7 +14,7 @@ Live at: https://theatre-rota-query.onrender.com
 
 1. Visit the website
 2. Pick a **Week** (1-4), **Day**, and **Shift Type** from the dropdowns
-3. Toggle **Band** checkboxes to filter by staff band
+3. Use the **All** button to toggle all bands on/off, or click individual **Band** checkboxes to filter by staff band
 4. Results update automatically -- no need to click a button
 
 ## Updating the Rota
